@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # toolsディレクトリを作成
-tools_dir="../../tools"
+tools_dir="../tools"
 mkdir -p "$tools_dir"
 
 # mitamae
