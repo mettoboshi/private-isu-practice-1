@@ -12,8 +12,7 @@ remote_file "/etc/nginx/sites-available/isucon-php.conf" do
 end
 
 # isucon-php.confのシンボリックリンクを作成
-link "/etc/nginx/sites-available/isucon-php.conf" do
-  to ("/etc/nginx/sites-enabled/isucon-php.conf")
-  force true
+link "/etc/nginx/sites-enabled/isucon-php.conf" do
+  to ("/etc/nginx/sites-available/isucon-php.conf")
   action :create
 end
