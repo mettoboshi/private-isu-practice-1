@@ -3,6 +3,14 @@ file "/etc/nginx/sites-enabled/isucon.conf" do
   action :delete
 end
 
+# nginx.confをコピー
+remote_file "/etc/nginx/nginx.conf" do
+  owner  "root"
+  group  "root"
+  source "config/nginx.conf"
+  mode   "644"
+end
+
 # isucon-php.confをコピー
 remote_file "/etc/nginx/sites-available/isucon-php.conf" do
   owner  "root"
