@@ -1,6 +1,7 @@
 # alpのバージョンとアーキテクチャを指定
 version = "1.0.14"
-arch = "linux_amd64"
+# arch = "linux_amd64"
+arch = "linux_arm64"
 
 # alpのバイナリをダウンロード
 execute "Download alp" do
