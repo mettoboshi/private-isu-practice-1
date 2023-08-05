@@ -1,9 +1,9 @@
 *
 !.gitignore
 !env.sh
-!/config/
-!/config/**/*
 !/provisioning/
 !/provisioning/**/*
 !/private_isu/
 !/private_isu/**/*
+!/work/
+!/work/**/*

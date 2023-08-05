@@ -1,7 +1,7 @@
 MYSQL_USER = 'isuconp'
 MYSQL_PASSWORD = 'isuconp'
 MYSQL_DATABASE = 'isuconp'
-DUMP_DIR = "/home/isucon/tmp"
+DUMP_DIR = "/home/isucon/work"
 DUMP_FILE = "#{DUMP_DIR}/dump.sql"
 
 # ディレクトリの生成
