@@ -8,8 +8,8 @@ execute "Move MySQL slow query log" do
   only_if "test -f #{MYSQL_LOG}"
 end
 
-# NGINXログファイルの移動
-execute "Move NGINX access log" do
+# nginxログファイルの移動
+execute "Move nginx access log" do
   command "sudo mv #{NGINX_LOG} #{NGINX_LOG}.#{current_time}"
   only_if "test -f #{NGINX_LOG}"
 end
@@ -19,7 +19,7 @@ service "mysql" do
   action :restart
 end
 
-# NGINXの再起動
+# Nginxの再起動
 service "nginx" do
   action :restart
 end
