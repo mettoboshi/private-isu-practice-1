@@ -1,4 +1,4 @@
-MYSQL_LOG = "/var/log/mysql/slow-query.log"
+MYSQL_LOG = "/var/log/mysql/mysql-slow.log"
 NGINX_LOG = "/var/log/nginx/access.log"
 current_time = `date "+%Y%m%d_%H%M%S"`.strip
 
