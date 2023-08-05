@@ -1,8 +1,8 @@
 TOOLS_DIR = "/home/isucon/tools"
 MYSQL_LOG_BASE_DIR = "/var/log/mysql"
-MYSQL_LOG="${MYSQL_LOG_BASE_DIR}/slow-query.log"
+MYSQL_LOG="#{MYSQL_LOG_BASE_DIR}/slow-query.log"
 NGINX_LOG_BASE_DIR = "var/log/nginx"
-NGINX_LOG = "${NGINX_LOG_BASE_DIR}/var/log/nginx/access.log"
+NGINX_LOG = "#{NGINX_LOG_BASE_DIR}/access.log"
 TIMESTAMP = `date "+%Y%m%d_%H%M%S"`.strip
 
 # MySQLのslow-query.logを解析
