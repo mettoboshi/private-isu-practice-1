@@ -13,6 +13,6 @@ end
 
 # nginxのaccess.logを解析
 execute "Analyze nginx access log with alp" do
-  command "${TOOLS_DIR}/alp json --sort sum -r -m \"\" -o count,method,uri,min,avg,max,sum --file #{NGINX_LOG} > ${NGINX_LOG_BASE_DIR}/nginx-alp.log"
+  command "#{TOOLS_DIR}/alp json --sort sum -r -m \"\" -o count,method,uri,min,avg,max,sum --file #{NGINX_LOG} > ${NGINX_LOG_BASE_DIR}/nginx-alp.log"
   only_if "test -f #{NGINX_LOG}"
 end
