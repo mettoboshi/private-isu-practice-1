@@ -3,7 +3,7 @@ VERSION = "1.10.1"  # version
 ARCH = "arm64"      # アーキテクチャ
 PLATFORM = "linux"  # プラットフォーム
 
-URL = "https://github.com/skeema/skeema/releases/download/v#{VERSION}/skeema_v#{VERSION}_#{PLATFORM}_#{ARCH}.tar.gz"
+URL = "https://github.com/skeema/skeema/releases/download/v#{VERSION}/skeema_#{VERSION}_#{PLATFORM}_#{ARCH}.tar.gz"
 # インストールするディレクトリ
 INSTALL_DIR = "/home/isucon/tools"
 
