@@ -11,8 +11,14 @@ execute "Analyze mysql slow-query log with pt-query-digest" do
   only_if "test -f #{MYSQL_LOG}"
 end
 
-# nginxのaccess.logを解析
+# nginxのaccess.logを解析(avg)
 execute "Analyze nginx access log with alp" do
-  command "#{TOOLS_DIR}/alp json --sort sum -r -m \"\" -o count,method,uri,min,avg,max,sum --file #{NGINX_LOG} > #{NGINX_LOG_BASE_DIR}/nginx-alp.log.#{TIMESTAMP}"
+  command "#{TOOLS_DIR}/alp json --sort avg -r -m \"\" -o count,method,uri,min,avg,max,sum --file #{NGINX_LOG} > #{NGINX_LOG_BASE_DIR}/nginx-alp-avg.log.#{TIMESTAMP}"
+  only_if "test -f #{NGINX_LOG}"
+end
+
+# nginxのaccess.logを解析(sum)
+execute "Analyze nginx access log with alp" do
+  command "#{TOOLS_DIR}/alp json --sort sum -r -m \"\" -o count,method,uri,min,avg,max,sum --file #{NGINX_LOG} > #{NGINX_LOG_BASE_DIR}/nginx-alp-sum.log.#{TIMESTAMP}"
   only_if "test -f #{NGINX_LOG}"
 end
