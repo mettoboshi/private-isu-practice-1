@@ -7,3 +7,5 @@
 !/private_isu/**/*
 !/work/
 !/work/**/*
+!/schemas/
+!/schemas/**/*
