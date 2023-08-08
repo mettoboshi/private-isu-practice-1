@@ -313,7 +313,7 @@ $app->get('/posts', function (Request $request, Response $response) {
     $params = $request->getQueryParams();
     $max_created_at = $params['max_created_at'] ?? null;
     $db = $this->get('db');
-    $ps = $db->prepare('SELECT `posts`.`id`, `posts`.`user_id`, `posts`.`body`, `posts`.`mime`, `posts`.`created_at` FROM `posts` left join `users` on `posts`.`user_id` = `users`.`id` where `users`.`del_flg` = 0 and WHERE `posts`.`created_at` <= ? ORDER BY `created_at` DESC LIMIT 20');
+    $ps = $db->prepare('SELECT `posts`.`id`, `posts`.`user_id`, `posts`.`body`, `posts`.`mime`, `posts`.`created_at` FROM `posts` left join `users` on `posts`.`user_id` = `users`.`id` where `users`.`del_flg` = 0 and `posts`.`created_at` <= ? ORDER BY `created_at` DESC LIMIT 20');
     $ps->execute([$max_created_at === null ? null : $max_created_at]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results);
