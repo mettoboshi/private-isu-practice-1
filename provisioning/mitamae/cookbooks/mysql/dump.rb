@@ -11,5 +11,5 @@ end
 
 # dumpファイルの作成
 execute "Dump MySQL structure" do
-  command "mysqldump --user=#{MYSQL_USER} --password=#{MYSQL_PASSWORD} --no-data #{MYSQL_DATABASE} > #{DUMP_FILE}"
+  command "mysqldump --user=#{MYSQL_USER} --password=#{MYSQL_PASSWORD} #{MYSQL_DATABASE} > #{DUMP_FILE}"
 end
