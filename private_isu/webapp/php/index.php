@@ -127,8 +127,10 @@ $container->set('helper', function ($c) {
 
         public function make_posts(array $results, $options = []) {
             $options += ['all_comments' => false];
+            $options += ['no_users' => false];
+            
             $all_comments = $options['all_comments'];
-
+            $no_users = $options['no_users'];
             $posts = [];
             foreach ($results as $post) {
                 $post['comment_count'] = $this->fetch_first('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?', $post['id'])['count'];
@@ -147,7 +149,7 @@ $container->set('helper', function ($c) {
                 $post['comments'] = array_reverse($comments);
 
                 $post['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $post['user_id']);
-                if ($post['user']['del_flg'] == 0) {
+                if ($no_users && $post['user']['del_flg'] == 0) {
                     $posts[] = $post;
                 }
                 if (count($posts) >= POSTS_PER_PAGE) {
@@ -326,7 +328,7 @@ $app->get('/posts/{id}', function (Request $request, Response $response, $args) 
     $ps = $db->prepare('SELECT * FROM `posts` WHERE `id` = ?');
     $ps->execute([$args['id']]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
-    $posts = $this->get('helper')->make_posts($results, ['all_comments' => true]);
+    $posts = $this->get('helper')->make_posts($results, ['all_comments' => true, 'no_users' => true]);
 
     if (count($posts) == 0) {
         $response->getBody()->write('404');
