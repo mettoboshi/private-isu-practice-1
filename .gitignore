@@ -5,7 +5,6 @@
 !/provisioning/**/*
 !/private_isu/
 !/private_isu/**/*
-!/work/
-!/work/**/*
 !/schemas/
 !/schemas/**/*
+.DS_Store
