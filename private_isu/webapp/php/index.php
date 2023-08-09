@@ -149,7 +149,7 @@ $container->set('helper', function ($c) {
                 $post['comments'] = array_reverse($comments);
 
                 $post['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $post['user_id']);
-                if ($no_users && $post['user']['del_flg'] == 0) {
+                if ($post['user']['del_flg'] == 0) {
                     $posts[] = $post;
                 }
                 if (count($posts) >= POSTS_PER_PAGE) {
