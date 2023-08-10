@@ -157,7 +157,7 @@ $container->set('helper', function ($c) {
                 $post['comments'] = array_reverse($comments);
 
                 $post['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $post['user_id']);
-                if ($post['user']['del_flg'] == 0) {
+                if ($post['del_flg'] == 0) {
                     $posts[] = $post;
                 }
                 if (count($posts) >= POSTS_PER_PAGE) {
@@ -321,6 +321,8 @@ $app->get('/', function (Request $request, Response $response) {
         '`posts`.`body`, ' .
         '`posts`.`mime`, ' .
         '`posts`.`created_at` ' .
+        '`users`.`del_flg` ' .
+        '`users`.`account_name` ' .
         'FROM `posts` ' .
         'inner join `users` on ' .
         '`posts`.`user_id` = `users`.`id` ' .
@@ -350,6 +352,8 @@ $app->get('/posts', function (Request $request, Response $response) {
         '`posts`.`body`, ' .
         '`posts`.`mime`, ' .
         '`posts`.`created_at` ' .
+        '`users`.`del_flg` ' .
+        '`users`.`account_name` ' .
         'FROM `posts` ' .
         'inner join `users` on ' .
         '`posts`.`user_id` = `users`.`id` ' .
@@ -367,7 +371,7 @@ $app->get('/posts', function (Request $request, Response $response) {
 
 $app->get('/posts/{id}', function (Request $request, Response $response, $args) {
     $db = $this->get('db');
-    $ps = $db->prepare('select p.`id`, p.`user_id`, p.`mime`, p.`body`, p.`created_at` from `posts` as p inner join `users` as u on p.`user_id` = u.`id` where p.`id` = ?');
+    $ps = $db->prepare('select p.`id`, p.`user_id`, p.`mime`, p.`body`, p.`created_at`, u.`del_flg`, u.`account_name` from `posts` as p inner join `users` as u on p.`user_id` = u.`id` where p.`id` = ?');
     $ps->execute([$args['id']]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results, ['all_comments' => true]);
@@ -544,6 +548,8 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
         '`posts`.`body`, ' .
         '`posts`.`mime`, ' .
         '`posts`.`created_at` ' .
+        '`users`.`del_flg` ' .
+        '`users`.`account_name` ' .
         'FROM `posts` ' .
         'inner join `users` on ' .
         '`posts`.`user_id` = `users`.`id` ' .
