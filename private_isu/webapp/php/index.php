@@ -367,7 +367,7 @@ $app->get('/posts', function (Request $request, Response $response) {
 
 $app->get('/posts/{id}', function (Request $request, Response $response, $args) {
     $db = $this->get('db');
-    $ps = $db->prepare('select * from `posts` as p inner join `users` as u on p.`user_id` = u.`id` where p.`id` = ?');
+    $ps = $db->prepare('select p.`id`, p.`user_id`, p.`mime`, p.`body`, p.`created_at` from `posts` as p inner join `users` as u on p.`user_id` = u.`id` where p.`id` = ?');
     $ps->execute([$args['id']]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results, ['all_comments' => true]);
