@@ -550,7 +550,7 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
         'inner join `users` on ' .
         '`posts`.`user_id` = `users`.`id` ' .
         'where ' .
-        '`users`.`del_flg` = 0' .
+        '`users`.`del_flg` = 0 ' .
         'and `posts`.`user_id` = ? ' .
         'ORDER BY `posts`.`created_at` DESC ' .
         'LIMIT 20');
