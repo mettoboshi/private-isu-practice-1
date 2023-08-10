@@ -316,7 +316,20 @@ $app->get('/', function (Request $request, Response $response) {
     $me = $this->get('helper')->get_session_user();
 
     $db = $this->get('db');
-    $ps = $db->prepare('SELECT `posts`.`id`, `posts`.`user_id`, `posts`.`body`, `posts`.`mime`, `posts`.`created_at` FROM `posts` inner join `users` on `posts`.`user_id` = `users`.`id` where `users`.`del_flg` = 0 ORDER BY `posts`.`created_at` DESC LIMIT 20');
+    $ps = $db->prepare(
+        'SELECT' .
+        '`posts`.`id`,' .
+        '`posts`.`user_id`,' .
+        '`posts`.`body`,' .
+        '`posts`.`mime`,' .
+        '`posts`.`created_at`' .
+        'FROM `posts`' .
+        'inner join `users` on' .
+        '`posts`.`user_id` = `users`.`id`' .
+        'where' .
+        '`users`.`del_flg` = 0' .
+        'ORDER BY `posts`.`created_at` DESC' .
+        'LIMIT 20');
     $ps->execute();
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results);
