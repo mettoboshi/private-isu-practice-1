@@ -551,7 +551,7 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
         '`posts`.`user_id` = `users`.`id` ' .
         'where ' .
         '`users`.`del_flg` = 0' .
-        'and `posts`.`user_id` = ?' .
+        'and `posts`.`user_id` = ? ' .
         'ORDER BY `posts`.`created_at` DESC ' .
         'LIMIT 20');
 
