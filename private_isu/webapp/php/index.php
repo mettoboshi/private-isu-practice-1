@@ -137,10 +137,8 @@ $container->set('helper', function ($c) {
         public function make_posts(array $results, $options = [])
         {
             $options += ['all_comments' => false];
-            $options += ['no_users' => false];
 
             $all_comments = $options['all_comments'];
-            $no_users = $options['no_users'];
             $posts = [];
             foreach ($results as $post) {
                 $post['comment_count'] = $this->fetch_first('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?', $post['id'])['count'];
@@ -369,10 +367,10 @@ $app->get('/posts', function (Request $request, Response $response) {
 
 $app->get('/posts/{id}', function (Request $request, Response $response, $args) {
     $db = $this->get('db');
-    $ps = $db->prepare('SELECT * FROM `posts` WHERE `id` = ?');
+    $ps = $db->prepare('select * from `posts` as p inner join `users` as u on p.`user_id` = u.`id` where p.`id` = ?');
     $ps->execute([$args['id']]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
-    $posts = $this->get('helper')->make_posts($results, ['all_comments' => true, 'no_users' => true]);
+    $posts = $this->get('helper')->make_posts($results, ['all_comments' => true]);
 
     if (count($posts) == 0) {
         $response->getBody()->write('404');
