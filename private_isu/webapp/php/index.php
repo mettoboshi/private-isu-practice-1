@@ -1,4 +1,5 @@
 <?php
+
 use Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
@@ -19,7 +20,8 @@ if (is_file($file)) {
     ][pathinfo($file, PATHINFO_EXTENSION)] ?? false;
     if ($mimetype) {
         header("Content-Type: {$mimetype}");
-        echo file_get_contents($file); exit;
+        echo file_get_contents($file);
+        exit;
     }
 }
 
@@ -38,7 +40,7 @@ session_start();
 
 // dependency
 $container = new Container();
-$container->set('settings', function() {
+$container->set('settings', function () {
     return [
         'public_folder' => dirname(dirname(__FILE__)) . '/public',
         'db' => [
@@ -61,7 +63,8 @@ $container->set('db', function ($c) {
 
 $container->set('view', function ($c) {
     return new class(__DIR__ . '/views/') extends \Slim\Views\PhpRenderer {
-        public function render(\Psr\Http\Message\ResponseInterface $response, string $template, array $data = []): ResponseInterface {
+        public function render(\Psr\Http\Message\ResponseInterface $response, string $template, array $data = []): ResponseInterface
+        {
             $data += ['view' => $template];
             return parent::render($response, 'layout.php', $data);
         }
@@ -76,15 +79,18 @@ $container->set('helper', function ($c) {
     return new class($c) {
         public PDO $db;
 
-        public function __construct($c) {
+        public function __construct($c)
+        {
             $this->db = $c->get('db');
         }
 
-        public function db() {
+        public function db()
+        {
             return $this->db;
         }
 
-        public function db_initialize() {
+        public function db_initialize()
+        {
             $db = $this->db();
             $sql = [];
             $sql[] = 'DELETE FROM users WHERE id > 1000';
@@ -92,12 +98,13 @@ $container->set('helper', function ($c) {
             $sql[] = 'DELETE FROM comments WHERE id > 100000';
             $sql[] = 'UPDATE users SET del_flg = 0';
             $sql[] = 'UPDATE users SET del_flg = 1 WHERE id % 50 = 0';
-            foreach($sql as $s) {
+            foreach ($sql as $s) {
                 $db->query($s);
             }
         }
 
-        public function fetch_first($query, ...$params) {
+        public function fetch_first($query, ...$params)
+        {
             $db = $this->db();
             $ps = $db->prepare($query);
             $ps->execute($params);
@@ -106,7 +113,8 @@ $container->set('helper', function ($c) {
             return $result;
         }
 
-        public function try_login($account_name, $password) {
+        public function try_login($account_name, $password)
+        {
             $user = $this->fetch_first('SELECT * FROM users WHERE account_name = ? AND del_flg = 0', $account_name);
             if ($user !== false && calculate_passhash($user['account_name'], $password) == $user['passhash']) {
                 return $user;
@@ -117,7 +125,8 @@ $container->set('helper', function ($c) {
             }
         }
 
-        public function get_session_user() {
+        public function get_session_user()
+        {
             if (isset($_SESSION['user'], $_SESSION['user']['id'])) {
                 return $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $_SESSION['user']['id']);
             } else {
@@ -125,7 +134,8 @@ $container->set('helper', function ($c) {
             }
         }
 
-        public function make_posts(array $results, $options = []) {
+        public function make_posts(array $results, $options = [])
+        {
             $options += ['all_comments' => false];
             $options += ['no_users' => false];
 
@@ -167,15 +177,18 @@ $app = AppFactory::create();
 
 // ------- helper method for view
 
-function escape_html($h) {
+function escape_html($h)
+{
     return htmlspecialchars($h, ENT_QUOTES | ENT_HTML5, 'UTF-8');
 }
 
-function redirect(Response $response, $location, $status) {
+function redirect(Response $response, $location, $status)
+{
     return $response->withStatus($status)->withHeader('Location', $location);
 }
 
-function image_url($post) {
+function image_url($post)
+{
     $ext = '';
     if ($post['mime'] === 'image/jpeg') {
         $ext = '.jpg';
@@ -187,24 +200,28 @@ function image_url($post) {
     return "/image/{$post['id']}{$ext}";
 }
 
-function validate_user($account_name, $password) {
+function validate_user($account_name, $password)
+{
     if (!(preg_match('/\A[0-9a-zA-Z_]{3,}\z/', $account_name) && preg_match('/\A[0-9a-zA-Z_]{6,}\z/', $password))) {
         return false;
     }
     return true;
 }
 
-function digest($src) {
+function digest($src)
+{
     // opensslのバージョンによっては (stdin)= というのがつくので取る
     $src = escapeshellarg($src);
     return trim(`printf "%s" {$src} | openssl dgst -sha512 | sed 's/^.*= //'`);
 }
 
-function calculate_salt($account_name) {
+function calculate_salt($account_name)
+{
     return digest($account_name);
 }
 
-function calculate_passhash($account_name, $password) {
+function calculate_passhash($account_name, $password)
+{
     $salt = calculate_salt($account_name);
     return digest("{$password}:{$salt}");
 }
@@ -237,7 +254,7 @@ $app->post('/login', function (Request $request, Response $response) {
 
     if ($user) {
         $_SESSION['user'] = [
-          'id' => $user['id'],
+            'id' => $user['id'],
         ];
         return redirect($response, '/', 302);
     } else {
@@ -378,10 +395,10 @@ $app->post('/', function (Request $request, Response $response) {
         $query = 'INSERT INTO `posts` (`user_id`, `mime`, `imgdata`, `body`) VALUES (?,?,?,?)';
         $ps = $db->prepare($query);
         $ps->execute([
-          $me['id'],
-          $mime,
-          file_get_contents($_FILES['file']['tmp_name']),
-          $params['body'],
+            $me['id'],
+            $mime,
+            file_get_contents($_FILES['file']['tmp_name']),
+            $params['body'],
         ]);
         $pid = $db->lastInsertId();
         return redirect($response, "/posts/{$pid}", 302);
@@ -515,7 +532,7 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
 
     $me = $this->get('helper')->get_session_user();
 
-    return $this->get('view')->render($response, 'user.php', ['posts' => $posts, 'user' => $user, 'post_count' => $post_count, 'comment_count' => $comment_count, 'commented_count'=> $commented_count, 'me' => $me]);
+    return $this->get('view')->render($response, 'user.php', ['posts' => $posts, 'user' => $user, 'post_count' => $post_count, 'comment_count' => $comment_count, 'commented_count' => $commented_count, 'me' => $me]);
 });
 
 $app->run();
