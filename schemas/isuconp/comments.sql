@@ -5,5 +5,7 @@ CREATE TABLE `comments` (
   `comment` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX `idx_post_id` (`post_id`)
+  INDEX `idx_post_id` (`post_id`),
+  INDEX `idx_user_id` (`user_id`),
+  INDEX `idx_created_at` (`created_at` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
