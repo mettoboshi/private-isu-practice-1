@@ -314,26 +314,21 @@ $app->get('/', function (Request $request, Response $response) {
 
     $db = $this->get('db');
     $ps = $db->prepare(
-        'select ' .
-        'p.`id`, ' .
-        'p.`user_id`, ' .
-        'p.`body`, ' .
-        'p.`mime`, ' .
-        'p.`created_at`, ' .
-        'u.`del_flg`, ' .
-        'u.`account_name`' .
-        'from(select' .
-        '`posts` . `id`, ' .
-        '`posts` . `user_id`, ' .
-        '`posts` . `body`, ' .
-        '`posts` . `mime`, ' .
-        '`posts` . `created_at` ' .
-        'from `posts`' .
-        'order by `posts` . `created_at` DESC' .
-        'limit 30) as p' .
-        'inner join users as u' .
-        'on p . `user_id` = u . `id`' .
-        'limit 20');
+        'SELECT ' .
+        '`posts`.`id`, ' .
+        '`posts`.`user_id`, ' .
+        '`posts`.`body`, ' .
+        '`posts`.`mime`, ' .
+        '`posts`.`created_at`, ' .
+        '`users`.`del_flg`, ' .
+        '`users`.`account_name` ' .
+        'FROM `posts` ' .
+        'inner join `users` on ' .
+        '`posts`.`user_id` = `users`.`id` ' .
+        'where ' .
+        '`users`.`del_flg` = 0 ' .
+        'ORDER BY `posts`.`created_at` DESC ' .
+        'LIMIT 20');
     $ps->execute();
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results);
