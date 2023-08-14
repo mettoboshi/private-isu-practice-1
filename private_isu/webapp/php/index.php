@@ -461,13 +461,14 @@ $app->get('/image/{id}.{ext}', function (Request $request, Response $response, $
     if (($args['ext'] == 'jpg' && $post['mime'] == 'image/jpeg') ||
         ($args['ext'] == 'png' && $post['mime'] == 'image/png') ||
         ($args['ext'] == 'gif' && $post['mime'] == 'image/gif')) {
+
+        // 画像データを静的ファイルとして保存
+        $imagePath = "/var/www/static/images/{$args['id']}.{$args['ext']}";
+        file_put_contents($imagePath, $post['imgdata']);
+
         $response->getBody()->write($post['imgdata']);
         return $response->withHeader('Content-Type', $post['mime']);
     }
-
-    // 画像データを静的ファイルとして保存
-    $imagePath = "/var/www/static/images/{$args['id']}.{$args['ext']}";
-    file_put_contents($imagePath, $post['imgdata']);
 
     $response->getBody()->write('404');
     return $response->withStatus(404);
