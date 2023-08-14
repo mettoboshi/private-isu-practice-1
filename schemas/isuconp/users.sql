@@ -6,6 +6,5 @@ CREATE TABLE `users` (
   `del_flg` tinyint(1) NOT NULL DEFAULT '0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `account_name` (`account_name`),
-  INDEX `idx_del_flg` (`del_flg`)
+  UNIQUE KEY `account_name` (`account_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

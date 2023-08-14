@@ -6,6 +6,6 @@ CREATE TABLE `posts` (
   `body` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  INDEX `idx_user_id_created_at` (`user_id`, `created_at` DESC),
-  INDEX `idx_user_id` (`user_id`)
+  INDEX `idx_user_id` (`user_id`),
+  INDEX `idx_created_at` (`created_at` DESC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
