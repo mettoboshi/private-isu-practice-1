@@ -42,3 +42,8 @@ remote_file "/etc/nginx/sites-available/isucon-php.conf" do
   source "config/sites-available/isucon-php.conf"
   mode   "644"
 end
+
+# nginxの再起動
+service "nginx" do
+  action :restart
+end
