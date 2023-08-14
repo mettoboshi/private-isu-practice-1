@@ -18,7 +18,7 @@ end
 # nginx.confのバックアップ
 execute "backup nginx.conf" do
   command "mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.#{current_time}"
-  only_if "diff -q /etc/nginx/nginx.conf #{current_dir}/config/nginx.conf"
+  not_if "diff -q /etc/nginx/nginx.conf #{current_dir}/config/nginx.conf"
 end
 
 # nginx.confをコピー
@@ -32,7 +32,7 @@ end
 # isucon-php.confのバックアップ
 execute "backup isucon-php.conf" do
   command "mv /etc/nginx/sites-available/isucon-php.conf /etc/nginx/sites-available/isucon-php.conf.#{current_time}"
-  only_if "diff -q /etc/nginx/sites-available/isucon-php.conf #{current_dir}/config/sites-available/isucon-php.conf"
+  not_if "diff -q /etc/nginx/sites-available/isucon-php.conf #{current_dir}/config/sites-available/isucon-php.conf"
 end
 
 # isucon-php.confをコピー
