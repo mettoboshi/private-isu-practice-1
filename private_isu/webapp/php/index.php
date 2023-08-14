@@ -333,6 +333,8 @@ $app->get('/', function (Request $request, Response $response) {
         'limit 30) as p ' .
         'inner join users as u ' .
         'on p . `user_id` = u . `id` ' .
+        'where ' .
+        'u.`del_flg` = 0 ' .
         'limit 20');
     $ps->execute();
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
