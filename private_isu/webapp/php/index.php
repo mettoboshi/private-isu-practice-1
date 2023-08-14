@@ -328,11 +328,11 @@ $app->get('/', function (Request $request, Response $response) {
         '`posts` . `body`, ' .
         '`posts` . `mime`, ' .
         '`posts` . `created_at` ' .
-        'from `posts`' .
-        'order by `posts` . `created_at` DESC' .
-        'limit 30) as p' .
-        'inner join users as u' .
-        'on p . `user_id` = u . `id`' .
+        'from `posts` ' .
+        'order by `posts` . `created_at` DESC ' .
+        'limit 30) as p ' .
+        'inner join users as u ' .
+        'on p . `user_id` = u . `id` ' .
         'limit 20');
     $ps->execute();
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
