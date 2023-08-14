@@ -320,8 +320,8 @@ $app->get('/', function (Request $request, Response $response) {
         '`posts`.`user_id`, ' .
         '`posts`.`body`, ' .
         '`posts`.`mime`, ' .
-        '`posts`.`created_at` ' .
-        '`users`.`del_flg` ' .
+        '`posts`.`created_at`, ' .
+        '`users`.`del_flg`, ' .
         '`users`.`account_name` ' .
         'FROM `posts` ' .
         'inner join `users` on ' .
@@ -351,8 +351,8 @@ $app->get('/posts', function (Request $request, Response $response) {
         '`posts`.`user_id`, ' .
         '`posts`.`body`, ' .
         '`posts`.`mime`, ' .
-        '`posts`.`created_at` ' .
-        '`users`.`del_flg` ' .
+        '`posts`.`created_at`, ' .
+        '`users`.`del_flg`, ' .
         '`users`.`account_name` ' .
         'FROM `posts` ' .
         'inner join `users` on ' .
@@ -547,8 +547,8 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
         '`posts`.`user_id`, ' .
         '`posts`.`body`, ' .
         '`posts`.`mime`, ' .
-        '`posts`.`created_at` ' .
-        '`users`.`del_flg` ' .
+        '`posts`.`created_at`, ' .
+        '`users`.`del_flg`, ' .
         '`users`.`account_name` ' .
         'FROM `posts` ' .
         'inner join `users` on ' .
