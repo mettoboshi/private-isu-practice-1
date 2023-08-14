@@ -1,6 +1,5 @@
 # 現在の日時を取得
-current_time = Time.now
-formatted_time = "#{current_time.year}#{current_time.month.to_s.rjust(2, '0')}#{current_time.day.to_s.rjust(2, '0')}#{current_time.hour.to_s.rjust(2, '0')}#{current_time.min.to_s.rjust(2, '0')}#{current_time.sec.to_s.rjust(2, '0')}"
+current_time = Time.now.to_s.gsub(/[- :+]/, '')
 
 # カレントディレクトリを取得
 current_dir = File.dirname(__FILE__)
