@@ -556,23 +556,31 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
         return $response->withStatus(404);
     }
     $ps = $db->prepare(
-        'SELECT ' .
-        '`posts`.`id`, ' .
-        '`posts`.`user_id`, ' .
-        '`posts`.`body`, ' .
-        '`posts`.`mime`, ' .
-        '`posts`.`created_at`, ' .
-        '`users`.`del_flg`, ' .
-        '`users`.`account_name` ' .
-        'FROM `posts` ' .
-        'inner join `users` on ' .
-        '`posts`.`user_id` = `users`.`id` ' .
+        'select ' .
+        'p.`id`, ' .
+        'p.`user_id`, ' .
+        'p.`body`, ' .
+        'p.`mime`, ' .
+        'p.`created_at`, ' .
+        'u.`del_flg`, ' .
+        'u.`account_name`' .
+        'from(select' .
+        '`posts` . `id`, ' .
+        '`posts` . `user_id`, ' .
+        '`posts` . `body`, ' .
+        '`posts` . `mime`, ' .
+        '`posts` . `created_at` ' .
+        'from `posts` ' .
         'where ' .
-        '`users`.`del_flg` = 0 ' .
-        'and `posts`.`user_id` = ? ' .
-        'ORDER BY `posts`.`created_at` DESC ' .
-        'LIMIT 20');
-
+        '`posts`.`user_id` = ? ' .
+        'order by `posts` . `created_at` DESC ' .
+        'limit 30) as p ' .
+        'inner join users as u ' .
+        'on p . `user_id` = u . `id` ' .
+        'where ' .
+        'u.`del_flg` = 0 ' .
+        'limit 20');
+    
     $ps->execute([$user['id']]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results);
