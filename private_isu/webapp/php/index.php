@@ -156,7 +156,6 @@ $container->set('helper', function ($c) {
                 unset($comment);
                 $post['comments'] = array_reverse($comments);
 
-                $post['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $post['user_id']);
                 if ($post['del_flg'] == 0) {
                     $posts[] = $post;
                 }
@@ -578,7 +577,7 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
 
     $me = $this->get('helper')->get_session_user();
 
-    return $this->get('view')->render($response, 'user.php', ['posts' => $posts, 'user' => $user, 'post_count' => $post_count, 'comment_count' => $comment_count, 'commented_count' => $commented_count, 'me' => $me]);
+    return $this->get('view')->render($response, 'user.php', ['posts' => $posts, 'post_count' => $post_count, 'comment_count' => $comment_count, 'commented_count' => $commented_count, 'me' => $me]);
 });
 
 $app->run();
