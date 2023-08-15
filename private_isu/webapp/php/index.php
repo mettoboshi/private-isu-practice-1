@@ -421,7 +421,7 @@ $app->post('/', function (Request $request, Response $response) {
         // 投稿のContent-Typeからファイルのタイプを決定する
         if (strpos($_FILES['file']['type'], 'jpeg') !== false) {
             $mime = 'image/jpeg';
-            $ext = 'jpeg';
+            $ext = 'jpg';
         } elseif (strpos($_FILES['file']['type'], 'png') !== false) {
             $mime = 'image/png';
             $ext = 'png';
