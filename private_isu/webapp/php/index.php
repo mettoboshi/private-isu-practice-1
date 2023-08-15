@@ -463,7 +463,12 @@ $app->get('/image/{id}.{ext}', function (Request $request, Response $response, $
         ($args['ext'] == 'gif' && $post['mime'] == 'image/gif')) {
 
         // 画像データを静的ファイルとして保存
-        $imagePath = "/var/www/static/images/{$args['id']}.{$args['ext']}";
+        $imagePath = "/home/isucon/private_isu/webapp/public/image/{$args['id']}.{$args['ext']}";
+
+        // ディレクトリが存在しない場合、ディレクトリを作成
+        if (!is_dir($imagePath)) {
+            mkdir($imagePath, 0777, true);  // 再起的にディレクトリを作成
+        }
         file_put_contents($imagePath, $post['imgdata']);
 
         $response->getBody()->write($post['imgdata']);
