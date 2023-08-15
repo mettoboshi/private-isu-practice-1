@@ -417,13 +417,17 @@ $app->post('/', function (Request $request, Response $response) {
 
     if ($_FILES['file']) {
         $mime = '';
+        $ext = '';
         // 投稿のContent-Typeからファイルのタイプを決定する
         if (strpos($_FILES['file']['type'], 'jpeg') !== false) {
             $mime = 'image/jpeg';
+            $ext = 'jpeg';
         } elseif (strpos($_FILES['file']['type'], 'png') !== false) {
             $mime = 'image/png';
+            $ext = 'png';
         } elseif (strpos($_FILES['file']['type'], 'gif') !== false) {
             $mime = 'image/gif';
+            $ext = 'gif';
         } else {
             $this->get('flash')->addMessage('notice', '投稿できる画像形式はjpgとpngとgifだけです');
             return redirect($response, '/', 302);
@@ -435,15 +439,25 @@ $app->post('/', function (Request $request, Response $response) {
         }
 
         $db = $this->get('db');
-        $query = 'INSERT INTO `posts` (`user_id`, `mime`, `imgdata`, `body`) VALUES (?,?,?,?)';
+        $query = 'INSERT INTO `posts` (`user_id`, `mime`, `body`) VALUES (?,?,?)';
         $ps = $db->prepare($query);
         $ps->execute([
             $me['id'],
             $mime,
-            file_get_contents($_FILES['file']['tmp_name']),
+//            file_get_contents($_FILES['file']['tmp_name']),
             $params['body'],
         ]);
         $pid = $db->lastInsertId();
+
+        // 画像データを静的ファイルとして保存
+        $imagePath = "/home/isucon/private_isu/webapp/public/image/{$pid}.{$ext}";
+
+        // ディレクトリが存在しない場合、ディレクトリを作成
+        if (!is_dir($imagePath)) {
+            mkdir($imagePath, 0777, true);  // 再起的にディレクトリを作成
+        }
+
+        file_put_contents($imagePath, file_get_contents($_FILES['file']['tmp_name']));
         return redirect($response, "/posts/{$pid}", 302);
     } else {
         $this->get('flash')->addMessage('notice', '画像が必須です');
