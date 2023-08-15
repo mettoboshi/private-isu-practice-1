@@ -479,7 +479,7 @@ $app->get('/image/{id}.{ext}', function (Request $request, Response $response, $
 
         // 画像データを静的ファイルとして保存
         $imagePath = "/home/isucon/private_isu/webapp/public/image/";
-        $imageFileName = "{$args['id']}.{$args['ext']}}";
+        $imageFileName = "{$args['id']}.{$args['ext']}";
         $imageFile = $imagePath . $imageFileName;
         // ディレクトリが存在しない場合、ディレクトリを作成
         if (!is_dir($imagePath)) {
