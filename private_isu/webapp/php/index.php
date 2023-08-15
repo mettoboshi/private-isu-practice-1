@@ -450,14 +450,15 @@ $app->post('/', function (Request $request, Response $response) {
         $pid = $db->lastInsertId();
 
         // 画像データを静的ファイルとして保存
-        $imagePath = "/home/isucon/private_isu/webapp/public/image/{$pid}.{$ext}";
-
+        $imagePath = "/home/isucon/private_isu/webapp/public/image/";
+        $imageFileName = "{$pid}.{$ext}";
+        $imageFile = $imagePath . $imageFileName;
         // ディレクトリが存在しない場合、ディレクトリを作成
         if (!is_dir($imagePath)) {
             mkdir($imagePath, 0777, true);  // 再起的にディレクトリを作成
         }
 
-        file_put_contents($imagePath, file_get_contents($_FILES['file']['tmp_name']));
+        file_put_contents($imageFile, file_get_contents($_FILES['file']['tmp_name']));
         return redirect($response, "/posts/{$pid}", 302);
     } else {
         $this->get('flash')->addMessage('notice', '画像が必須です');
@@ -477,13 +478,14 @@ $app->get('/image/{id}.{ext}', function (Request $request, Response $response, $
         ($args['ext'] == 'gif' && $post['mime'] == 'image/gif')) {
 
         // 画像データを静的ファイルとして保存
-        $imagePath = "/home/isucon/private_isu/webapp/public/image/{$args['id']}.{$args['ext']}";
-
+        $imagePath = "/home/isucon/private_isu/webapp/public/image/";
+        $imageFileName = "{$args['id']}.{$args['ext']}}";
+        $imageFile = $imagePath . $imageFileName;
         // ディレクトリが存在しない場合、ディレクトリを作成
         if (!is_dir($imagePath)) {
             mkdir($imagePath, 0777, true);  // 再起的にディレクトリを作成
         }
-        file_put_contents($imagePath, $post['imgdata']);
+        file_put_contents($imageFile, $post['imgdata']);
 
         $response->getBody()->write($post['imgdata']);
         return $response->withHeader('Content-Type', $post['mime']);
