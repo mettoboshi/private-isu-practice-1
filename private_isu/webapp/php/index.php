@@ -444,7 +444,6 @@ $app->post('/', function (Request $request, Response $response) {
         $ps->execute([
             $me['id'],
             $mime,
-//            file_get_contents($_FILES['file']['tmp_name']),
             $params['body'],
         ]);
         $pid = $db->lastInsertId();
