@@ -439,7 +439,7 @@ $app->post('/', function (Request $request, Response $response) {
         }
 
         $db = $this->get('db');
-        $query = 'INSERT INTO `posts` (`user_id`, `mime`, `body`) VALUES (?,?,?,?)';
+        $query = 'INSERT INTO `posts` (`user_id`, `mime`, `imagedata`,`body`) VALUES (?,?,?,?)';
         $ps = $db->prepare($query);
         $ps->execute([
             $me['id'],
