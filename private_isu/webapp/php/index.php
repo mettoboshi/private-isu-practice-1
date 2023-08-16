@@ -157,7 +157,6 @@ $container->set('helper', function ($c) {
             }
 
             foreach ($results as $post) {
-//                $post['comment_count'] = $this->fetch_first('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?', $post['id'])['count'];
                 $post['comment_count'] = $restructured_result_comments[$post['id']];
                 $query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` DESC';
                 if (!$all_comments) {
