@@ -158,7 +158,7 @@ $container->set('helper', function ($c) {
 
             foreach ($results as $post) {
                 $post['comment_count'] = $restructured_result_comments[$post['id']];
-                $query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` DESC';
+                $query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` ASC';
                 if (!$all_comments) {
                     $query .= ' LIMIT 3';
                 }
@@ -170,7 +170,7 @@ $container->set('helper', function ($c) {
                     $comment['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $comment['user_id']);
                 }
                 unset($comment);
-                $post['comments'] = array_reverse($comments);
+                $post['comments'] = $comments;
 
                 $posts[] = $post;
             }
