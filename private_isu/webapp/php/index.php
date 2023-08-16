@@ -137,11 +137,28 @@ $container->set('helper', function ($c) {
         public function make_posts(array $results, $options = [])
         {
             $options += ['all_comments' => false];
-
             $all_comments = $options['all_comments'];
             $posts = [];
+            $id_list = implode(',', array_column($results, 'id'));
+
+            $ps = $this->db()->prepare(
+                'SELECT ' .
+                'p.id, ' .
+                'COUNT(p.id) AS comment_count ' .
+                'FROM posts AS p ' .
+                'LEFT OUTER JOIN comments AS c ON p.id = c.post_id ' .
+                'WHERE p.id IN (' . $id_list . ') ' .
+                'GROUP BY p.id'
+            );
+            $ps->execute();
+            $result_comments = $ps->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($result_comments as $row) {
+                $restructured_result_comments[$row['id']] = $row['count'];
+            }
+
             foreach ($results as $post) {
-                $post['comment_count'] = $this->fetch_first('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?', $post['id'])['count'];
+//                $post['comment_count'] = $this->fetch_first('SELECT COUNT(*) AS `count` FROM `comments` WHERE `post_id` = ?', $post['id'])['count'];
+                $post['comment_count'] = $restructured_result_comments[$post['id']];
                 $query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` DESC';
                 if (!$all_comments) {
                     $query .= ' LIMIT 3';
@@ -602,7 +619,7 @@ $app->get('/@{account_name}', function (Request $request, Response $response, $a
         'where ' .
         'u.`del_flg` = 0 ' .
         'limit 20');
-    
+
     $ps->execute([$user['id']]);
     $results = $ps->fetchAll(PDO::FETCH_ASSOC);
     $posts = $this->get('helper')->make_posts($results);
