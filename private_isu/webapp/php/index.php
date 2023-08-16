@@ -154,7 +154,7 @@ $container->set('helper', function ($c) {
             $ps->execute();
             $result_comment_counts = $ps->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result_comment_counts as $row) {
-                $restructured_result_comment_counts[$row['id']] = $row['count'];
+                $restructured_result_comment_counts[$row['id']] = $row['comment_count'];
             }
 
             $db = $this->get('db');
