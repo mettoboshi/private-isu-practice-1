@@ -207,7 +207,12 @@ $container->set('helper', function ($c) {
 //                    $comment['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $comment['user_id']);
 //                }
 //                unset($comment);
-                $post['comments'] = $restructured_result_comments[$post['id']];
+                if (isset($restructured_result_comments[$post['id']])) {
+                    $post['comments'] = $restructured_result_comments[$post['id']];
+                } else {
+                    $post['comments'] = [];
+                }
+                // $post['comments'] = $restructured_result_comments[$post['id']];
 
                 $posts[] = $post;
             }
