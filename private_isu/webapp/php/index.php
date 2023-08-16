@@ -156,12 +156,7 @@ $container->set('helper', function ($c) {
                 unset($comment);
                 $post['comments'] = array_reverse($comments);
 
-                if ($post['del_flg'] == 0) {
-                    $posts[] = $post;
-                }
-                if (count($posts) >= POSTS_PER_PAGE) {
-                    break;
-                }
+                $posts[] = $post;
             }
             return $posts;
         }
