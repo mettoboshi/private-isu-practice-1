@@ -139,7 +139,8 @@ $container->set('helper', function ($c) {
             $options += ['all_comments' => false];
             $all_comments = $options['all_comments'];
             $posts = [];
-            $id_list = implode(',', array_column($results, 'id'));
+            $ids = array_column($results, 'id');
+            $id_list = implode(',', $ids);
 
             $ps = $this->db()->prepare(
                 'SELECT ' .
@@ -151,26 +152,63 @@ $container->set('helper', function ($c) {
                 'GROUP BY p.id'
             );
             $ps->execute();
+            $result_comment_counts = $ps->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($result_comment_counts as $row) {
+                $restructured_result_comment_counts[$row['id']] = $row['count'];
+            }
+
+            $db = $this->get('db');
+            $query =
+                'SELECT ' .
+                'c.id, ' .
+                'c.post_id, ' .
+                'c.user_id, ' .
+                'c.comment, ' .
+                'c.created_at, ' .
+                'c.rn, ' .
+                'u.`account_name` ' .
+                'FROM ' .
+                '(SELECT ' .
+                '*, ' .
+                'ROW_NUMBER() OVER(PARTITION BY `post_id` ORDER BY `created_at` ASC) AS rn ' .
+                'FROM `comments` ' .
+                'WHERE `post_id` IN (' . $id_list . ')) AS c ' .
+                'INNER JOIN users AS u ON c.user_id = u.id ';
+
+            $whereClauses = [];
+            foreach ($ids as $id) {
+                $whereClauses[] = "(post_id = $id and rn <= 3)";
+            }
+
+            $whereString = implode(' or ', $whereClauses);
+            if ($all_comments) {
+                $query = $query .
+                    'WHERE ' .
+                    $whereString;
+            }
+
+            $ps = $db->prepare($query);
+            $ps->execute();
             $result_comments = $ps->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result_comments as $row) {
-                $restructured_result_comments[$row['id']] = $row['count'];
+                $restructured_result_comments[$row['post_id']][] = $row;
             }
 
             foreach ($results as $post) {
-                $post['comment_count'] = $restructured_result_comments[$post['id']];
-                $query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` ASC';
-                if (!$all_comments) {
-                    $query .= ' LIMIT 3';
-                }
-
-                $ps = $this->db()->prepare($query);
-                $ps->execute([$post['id']]);
-                $comments = $ps->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($comments as &$comment) {
-                    $comment['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $comment['user_id']);
-                }
-                unset($comment);
-                $post['comments'] = $comments;
+                $post['comment_count'] = $restructured_result_comment_counts[$post['id']];
+//                $query = 'SELECT * FROM `comments` WHERE `post_id` = ? ORDER BY `created_at` ASC';
+//                if (!$all_comments) {
+//                    $query .= ' LIMIT 3';
+//                }
+//
+//                $ps = $this->db()->prepare($query);
+//                $ps->execute([$post['id']]);
+//                $comments = $ps->fetchAll(PDO::FETCH_ASSOC);
+//                foreach ($comments as &$comment) {
+//                    $comment['user'] = $this->fetch_first('SELECT * FROM `users` WHERE `id` = ?', $comment['user_id']);
+//                }
+//                unset($comment);
+                $post['comments'] = $restructured_result_comments[$post['id']];
 
                 $posts[] = $post;
             }

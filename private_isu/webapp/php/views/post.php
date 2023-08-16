@@ -19,7 +19,7 @@
 
     <?php foreach ($post['comments'] as $comment): ?>
     <div class="isu-comment">
-      <a href="/@<?= escape_html(rawurlencode($comment['user']['account_name'])) ?>" class="isu-comment-account-name"><?= escape_html($comment['user']['account_name']) ?></a>
+      <a href="/@<?= escape_html(rawurlencode($comment['account_name'])) ?>" class="isu-comment-account-name"><?= escape_html($comment['account_name']) ?></a>
       <span class="isu-comment-text"><?= escape_html($comment['comment']) ?></span>
     </div>
     <?php endforeach ?>
