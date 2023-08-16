@@ -157,7 +157,6 @@ $container->set('helper', function ($c) {
                 $restructured_result_comment_counts[$row['id']] = $row['comment_count'];
             }
 
-            $db = $this->get('db');
             $query =
                 'SELECT ' .
                 'c.id, ' .
@@ -187,7 +186,7 @@ $container->set('helper', function ($c) {
                     $whereString;
             }
 
-            $ps = $db->prepare($query);
+            $ps = $this->db()->prepare($query);
             $ps->execute();
             $result_comments = $ps->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result_comments as $row) {
